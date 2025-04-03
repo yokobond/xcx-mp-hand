@@ -1,0 +1,14 @@
+{
+  "en": {
+    "xcxMPHand.name": "MediaPipe Hand Detection",
+    "xcxMPHand.doIt": "do it [SCRIPT]"
+  },
+  "ja": {
+    "xcxMPHand.name": "MediaPipe Hand Detection",
+    "xcxMPHand.doIt": "[SCRIPT] を実行する"
+  },
+  "ja-Hira": {
+    "xcxMPHand.name": "MediaPipe Hand Detection",
+    "xcxMPHand.doIt": "[SCRIPT] をじっこうする"
+  }
+}

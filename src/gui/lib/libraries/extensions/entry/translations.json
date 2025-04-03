@@ -1,0 +1,14 @@
+{
+  "en": {
+    "xcxMPHand.entry.name": "MediaPipe Hand Detection",
+    "xcxMPHand.entry.description": "Description of this extension"
+  },
+  "ja": {
+    "xcxMPHand.entry.name": "MediaPipe Hand Detection",
+    "xcxMPHand.entry.description": "拡張機能の説明"
+  },
+  "ja-Hira": {
+    "xcxMPHand.entry.name": "MediaPipe Hand Detection",
+    "xcxMPHand.entry.description": "かくちょうきのうのせつめい"
+  }
+}
