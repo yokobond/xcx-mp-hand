@@ -1,6 +1,6 @@
 {
   "name": "xcx-mp-hand",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "extension for Xcratch",
   "scripts": {
     "setup-dev": "node ./scripts/setup-dev.mjs",
