@@ -72,7 +72,9 @@ const rollupOptions = {
         },
         buildDelay: 500,
     },
-    external: [],
+    external: [
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest"
+    ],
 }
 
 export default rollupOptions;

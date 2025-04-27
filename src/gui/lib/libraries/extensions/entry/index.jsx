@@ -29,12 +29,12 @@ const entry = {
     insetIconURL: insetIconURL,
     get description () {
         return formatMessage({
-            defaultMessage: 'an extension for Xcratch',
+            defaultMessage: 'Hand position estimation using machine learning.',
             description: 'Description for this extension',
             id: 'xcxMPHand.entry.description'
         });
     },
-    tags: [],
+    tags: ['ai', 'hand', 'image', 'machine learning', 'ml', 'mediapipe', 'vision'],
     featured: true,
     disabled: false,
     bluetoothRequired: false,

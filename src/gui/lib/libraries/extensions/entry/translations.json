@@ -1,14 +1,14 @@
 {
   "en": {
     "xcxMPHand.entry.name": "MediaPipe Hand Detection",
-    "xcxMPHand.entry.description": "Description of this extension"
+    "xcxMPHand.entry.description": "Hand position estimation using machine learning. Using Google MediaPipe Hand Landmarker."
   },
   "ja": {
     "xcxMPHand.entry.name": "MediaPipe Hand Detection",
-    "xcxMPHand.entry.description": "拡張機能の説明"
+    "xcxMPHand.entry.description": "機械学習によって手の位置を推定します。 Google MediaPipe Hand Landmarker を使用しています。"
   },
   "ja-Hira": {
-    "xcxMPHand.entry.name": "MediaPipe Hand Detection",
-    "xcxMPHand.entry.description": "かくちょうきのうのせつめい"
+    "xcxMPHand.entry.name": "MediaPipe ハンド ディテクション",
+    "xcxMPHand.entry.description": "きかいがくしゅう に よって て の いち を よそう します。 Google MediaPipe Landmarker を しよう しています。"
   }
 }
