@@ -6,7 +6,7 @@ This extension uses MediaPipe's hand landmark detection to track hand movements 
 ## ✨ What You Can Do With This Extension
 
 Play [Example Project](https://xcratch.github.io/editor/#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3) to look at what you can do with "MediaPipe Hand Detection". 
-<iframe src="https://xcratch.github.io/editor/player#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3" width="540px" height="460px"></iframe>
+<iframe src="https://xcratch.github.io/editor/player#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3" width="540px" height="460px" allow="camera"></iframe>
 
 * Detect and track up to four hands simultaneously
 * Identify whether detected hands are left or right hands
