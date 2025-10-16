@@ -65,4 +65,4 @@ const setModelAssetPath = async function (path) {
     imageLandLandmarker = await createImageHandLandmarker();
 };
 
-export {detect, setModelAssetPath};
+export {detect, setModelAssetPath, modelAssetPath};

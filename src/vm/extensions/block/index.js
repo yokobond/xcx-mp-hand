@@ -4,7 +4,7 @@ import Cast from '../../util/cast';
 import translations from './translations.json';
 import blockIcon from './block-icon.png';
 // import Video from '../../io/video';
-import {detect, setModelAssetPath} from './hand-landmarker.js';
+import {detect, setModelAssetPath, modelAssetPath} from './hand-landmarker.js';
 
 /**
  * States the video sensing activity can be set to.
@@ -657,9 +657,18 @@ class ExtensionBlocks {
                     arguments: {
                         PATH: {
                             type: ArgumentType.STRING,
-                            defaultValue: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`
+                            defaultValue: modelAssetPath
                         }
                     }
+                },
+                {
+                    opcode: 'getModelPath',
+                    blockType: BlockType.REPORTER,
+                    text: formatMessage({
+                        id: 'xcxMPHand.getModelPath',
+                        default: 'get model path'
+                    }),
+                    disableMonitor: true
                 }
             ],
             menus: {
@@ -1015,6 +1024,13 @@ class ExtensionBlocks {
             });
     }
 
+    /**
+     * Get the model asset path.
+     * @returns {string} - the model asset path
+     */
+    getModelPath () {
+        return modelAssetPath;
+    }
 }
 
 export {ExtensionBlocks as default, ExtensionBlocks as blockClass};
