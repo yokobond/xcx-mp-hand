@@ -4,7 +4,7 @@ import Cast from '../../util/cast';
 import translations from './translations.json';
 import blockIcon from './block-icon.png';
 // import Video from '../../io/video';
-import {detect, setModelAssetPath, modelAssetPath} from './hand-landmarker.js';
+import {detect, setModelAssetPath, modelAssetPath, setNumHands, getNumHands} from './hand-landmarker.js';
 import {getCostumeByNameOrNumber, costumeToDataURL} from './costume-util.js';
 
 /**
@@ -504,6 +504,31 @@ class ExtensionBlocks {
                         TIME: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 100
+                        }
+                    }
+                },
+                {
+                    opcode: 'getNumHands',
+                    blockType: BlockType.REPORTER,
+                    disableMonitor: true,
+                    text: formatMessage({
+                        id: 'xcxMPHand.getNumHands',
+                        default: 'number of hands to detect',
+                        description: 'get the number of hands to detect'
+                    })
+                },
+                {
+                    opcode: 'setNumHands',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'xcxMPHand.setNumHands',
+                        default: 'set number of hands to detect to [NUM]',
+                        description: 'set the number of hands to detect'
+                    }),
+                    arguments: {
+                        NUM: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 4
                         }
                     }
                 },
@@ -1153,6 +1178,31 @@ class ExtensionBlocks {
      */
     getModelPath () {
         return modelAssetPath;
+    }
+
+    /**
+     * Get the number of hands to detect.
+     * @returns {number} - the number of hands to detect
+     */
+    getNumHands () {
+        return getNumHands();
+    }
+
+    /**
+     * Set the number of hands to detect.
+     * @param {object} args - the block arguments
+     * @param {number} args.NUM - the number of hands to detect
+     * @returns {Promise} - a promise that resolves when the number is set
+     */
+    setNumHands (args) {
+        const num = Cast.toNumber(args.NUM);
+        if (num < 1) return;
+        return setNumHands(num)
+            .then(() => 'Number of hands set successfully')
+            .catch(e => {
+                console.error(e);
+                return e.message;
+            });
     }
 }
 

@@ -12,6 +12,11 @@ let modelAssetPath = `https://storage.googleapis.com/mediapipe-models/hand_landm
 let runningMode = 'IMAGE';
 
 /**
+ * Number of hands to detect
+ */
+let numHands = 4;
+
+/**
  * Create video hand landmarker
  * @returns {HandLandmarker} - hand landmarker
  */
@@ -22,7 +27,7 @@ const createImageHandLandmarker = async () => {
             delegate: 'GPU'
         },
         runningMode: 'IMAGE',
-        numHands: 4
+        numHands: numHands
     });
     return marker;
 };
@@ -68,4 +73,23 @@ const setModelAssetPath = async function (path) {
     handLandmarker = await createImageHandLandmarker();
 };
 
-export {detect, detectForVideo, setModelAssetPath, modelAssetPath};
+/**
+ * Set number of hands to detect
+ * @param {number} num - number of hands
+ */
+const setNumHands = async function (num) {
+    numHands = num;
+    if (handLandmarker) {
+        await handLandmarker.setOptions({numHands: numHands});
+    }
+};
+
+/**
+ * Get number of hands to detect
+ * @returns {number} - number of hands
+ */
+const getNumHands = function () {
+    return numHands;
+};
+
+export {detect, detectForVideo, setModelAssetPath, modelAssetPath, setNumHands, getNumHands};

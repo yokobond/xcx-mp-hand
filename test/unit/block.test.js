@@ -1,5 +1,5 @@
 import { blockClass } from "../../src/vm/extensions/block/index.js";
-import { mockHelpers } from "../../src/vm/extensions/block/hand-landmarker.js";
+import { mockHelpers, setNumHands, getNumHands } from "../../src/vm/extensions/block/hand-landmarker.js";
 
 jest.mock("../../src/vm/extensions/block/hand-landmarker.js");
 jest.mock("../../src/vm/extensions/block/costume-util.js", () => ({
@@ -112,6 +112,10 @@ describe("blockClass", () => {
         // Reset the mock stage properties before each test
         mockStage.videoTransparency = 50;
         mockStage.videoState = 'off';
+        
+        // Reset mock function calls
+        setNumHands.mockClear();
+        getNumHands.mockClear();
     });
 
     test("should create an instance of blockClass", () => {
@@ -192,6 +196,37 @@ describe("blockClass", () => {
         
         block.setDetectionIntervalTime({ TIME: 200 });
         expect(block.getDetectionIntervalTime()).toBe(200);
+    });
+
+    test("should get and set number of hands to detect", async () => {
+        // Test getting default number of hands
+        const defaultNumHands = block.getNumHands();
+        expect(defaultNumHands).toBe(4); // Default is 4
+        
+        // Test setting number of hands
+        const result = await block.setNumHands({ NUM: 2 });
+        expect(result).toBe('Number of hands set successfully');
+        expect(block.getNumHands()).toBe(2);
+        
+        // Test setting another value
+        await block.setNumHands({ NUM: 6 });
+        expect(block.getNumHands()).toBe(6);
+    });
+
+    test("should not set number of hands below 1", async () => {
+        // First, ensure we start with the default value
+        const initialValue = block.getNumHands();
+        
+        // Try to set to 0 - should not set
+        const result = await block.setNumHands({ NUM: 0 });
+        expect(result).toBeUndefined();
+        
+        // Try to set to negative number - should not set
+        const result2 = await block.setNumHands({ NUM: -1 });
+        expect(result2).toBeUndefined();
+        
+        // Current value should remain unchanged
+        expect(block.getNumHands()).toBe(initialValue);
     });
 
     test("should return correct relative hand landmark coordinates", () => {

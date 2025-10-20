@@ -8,8 +8,9 @@ This extension uses MediaPipe's hand landmark detection to track hand movements 
 Play [Example Project](https://xcratch.github.io/editor/#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3) to look at what you can do with "MediaPipe Hand Detection". 
 <iframe src="https://xcratch.github.io/editor/player#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3" width="540px" height="460px" allow="camera"></iframe>
 
-* Detect and track up to four hands simultaneously
+* Detect and track multiple hands simultaneously in real-time from camera
 * Detect hands from static images (stage snapshots or sprite costumes)
+* Configure the maximum number of hands to detect (default: 4)
 * Identify whether detected hands are left or right hands
 * Track 21 different landmarks on each hand (fingertips, knuckles, etc.)
 * Access X, Y, and Z coordinates for precise hand positioning
@@ -54,6 +55,7 @@ PIP = Proximal interphalangeal joint, DIP = Distal interphalangeal joint
 - Stop hand detection
 - Is hand detecting? (boolean)
 - Get/Set hand detection interval time
+- Get/Set number of hands to detect
 - Set video transparency
 - Set camera direction (mirrored/flipped)
 

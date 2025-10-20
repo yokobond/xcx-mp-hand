@@ -103,6 +103,7 @@ for (let hand = 0; hand < 2; hand++) {
 // Mock return values and functions
 let currentMockHandData = mockHandData;
 let modelAssetPath = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+let numHands = 4;
 
 // Create mock detect function
 const detect = jest.fn(() => {
@@ -119,6 +120,15 @@ const setModelAssetPath = jest.fn(path => {
     return Promise.resolve();
 });
 
+// Create mock setNumHands function
+const setNumHands = jest.fn(num => {
+    numHands = num;
+    return Promise.resolve();
+});
+
+// Create mock getNumHands function
+const getNumHands = jest.fn(() => numHands);
+
 // Export helper functions to control mock behavior in tests
 const mockHelpers = {
     // Set custom hand data for testing specific scenarios
@@ -132,10 +142,11 @@ const mockHelpers = {
     // Reset to default mock data
     resetHandData: () => {
         currentMockHandData = mockHandData;
+        numHands = 4; // Reset numHands to default
         return currentMockHandData;
     },
     // Get the current model path
     getModelPath: () => modelAssetPath
 };
 
-export {detect, setModelAssetPath, modelAssetPath, mockHelpers};
+export {detect, setModelAssetPath, modelAssetPath, setNumHands, getNumHands, mockHelpers};
