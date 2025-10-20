@@ -733,8 +733,7 @@ class ExtensionBlocks {
 
         // Start the detection loop
         this.handDetecting = true;
-        
-        const detectFrame = () => {
+        const detectFrame = async () => {
             if (!this.handDetecting) {
                 return;
             }
@@ -747,21 +746,22 @@ class ExtensionBlocks {
                 this.detectionInterval = setTimeout(detectFrame, this.detectionIntervalTime);
                 return;
             }
-            // Send the frame to the hand detection model
-            const result = detect({
-                image: image,
-                runningMode: 'VIDEO'
-            });
-            if (!result.handednesses || !result.handednesses[0]) {
-                this.hands = null;
-            } else {
-                this.hands = result;
+            try {
+                // Send the frame to the hand detection model
+                const result = await detect(image);
+                if (!result.handednesses || !result.handednesses[0]) {
+                    this.hands = null;
+                } else {
+                    this.hands = result;
+                }
+            } catch (error) {
+                console.error('Error detecting hand:', error);
+            } finally {
+                // Schedule next detection
+                this.detectionInterval = setTimeout(detectFrame, this.detectionIntervalTime);
             }
-            
-            // Schedule next detection
-            this.detectionInterval = setTimeout(detectFrame, this.detectionIntervalTime);
         };
-        
+
         // Start the detection loop
         this.detectionInterval = setTimeout(detectFrame, this.detectionIntervalTime);
     }
@@ -815,23 +815,24 @@ class ExtensionBlocks {
         return new Promise(resolve => {
             this.runtime.renderer.requestSnapshot(imageDataURL => {
                 const image = new Image();
-                image.onload = () => {
+                image.onload = async () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = 480;
                     canvas.height = 360;
                     const context = canvas.getContext('2d');
                     context.drawImage(image, 0, 0, 480, 360);
                     const imageData = context.getImageData(0, 0, 480, 360);
-                    const result = detect({
-                        image: imageData,
-                        runningMode: 'IMAGE'
-                    });
+                    const result = await detect(imageData);
                     this.hands = result;
                     resolve('Hand detected');
                 };
                 image.src = imageDataURL;
             });
-        });
+        })
+            .catch(error => {
+                console.error('Error detecting hand:', error);
+                return error.message;
+            });
     }
 
     /**

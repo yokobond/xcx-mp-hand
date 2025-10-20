@@ -7,23 +7,14 @@ const vision = await FilesetResolver.forVisionTasks(
 let modelAssetPath = `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`;
 
 /**
- * Create hand landmarker
- * @returns {Promise<HandLandmarker>} - a Promise that resolves with a HandLandmarker instance
+ * runningMode: 'IMAGE' or 'VIDEO'
  */
-const createVideoHandLandmarker = async () => {
-    const marker = await HandLandmarker.createFromOptions(vision, {
-        baseOptions: {
-            modelAssetPath: modelAssetPath,
-            delegate: 'GPU'
-        },
-        runningMode: 'VIDEO',
-        numHands: 4
-    });
-    return marker;
-};
+let runningMode = 'IMAGE';
 
-let videoLandLandmarker = await createVideoHandLandmarker();
-
+/**
+ * Create video hand landmarker
+ * @returns {HandLandmarker} - hand landmarker
+ */
 const createImageHandLandmarker = async () => {
     const marker = await HandLandmarker.createFromOptions(vision, {
         baseOptions: {
@@ -36,23 +27,36 @@ const createImageHandLandmarker = async () => {
     return marker;
 };
 
-let imageLandLandmarker = await createImageHandLandmarker();
+let handLandmarker = await createImageHandLandmarker();
 
 /**
  * Detect hands
  * @param {ImageData} image - image data
- * @param {string} runningMode - running mode
  * @returns {HandLandmarkerResult} - hand landmark result
  */
-const detect = function ({image, runningMode}) {
-    if (runningMode === 'IMAGE') {
-        const handLandmarkerResult = imageLandLandmarker.detect(image);
-        return handLandmarkerResult;
-    } else if (runningMode === 'VIDEO') {
-        const startTimeMs = performance.now();
-        const handLandmarkerResult = videoLandLandmarker.detectForVideo(image, startTimeMs);
-        return handLandmarkerResult;
+const detect = async function (image) {
+    if (!handLandmarker) {
+        throw new Error('HandLandmarker has not been initialized.');
     }
+    if (runningMode !== 'IMAGE') {
+        runningMode = 'IMAGE';
+        await handLandmarker.setOptions({runningMode: 'IMAGE'});
+    }
+    const handLandmarkerResult = handLandmarker.detect(image);
+    return handLandmarkerResult;
+};
+
+const detectForVideo = async function (video) {
+    if (!handLandmarker) {
+        throw new Error('HandLandmarker has not been initialized.');
+    }
+    if (runningMode !== 'VIDEO') {
+        runningMode = 'VIDEO';
+        await handLandmarker.setOptions({runningMode: 'VIDEO'});
+    }
+    const timestamp = performance.now();
+    const handLandmarkerResult = handLandmarker.detectForVideo(video, timestamp);
+    return handLandmarkerResult;
 };
 
 /**
@@ -61,8 +65,7 @@ const detect = function ({image, runningMode}) {
  */
 const setModelAssetPath = async function (path) {
     modelAssetPath = path;
-    videoLandLandmarker = await createVideoHandLandmarker();
-    imageLandLandmarker = await createImageHandLandmarker();
+    handLandmarker = await createImageHandLandmarker();
 };
 
-export {detect, setModelAssetPath, modelAssetPath};
+export {detect, detectForVideo, setModelAssetPath, modelAssetPath};
