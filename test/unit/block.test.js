@@ -256,6 +256,12 @@ describe("blockClass", () => {
         expect(runtime.ioDevices.video.mirror).toBe(false);
     });
 
+    test("should set video transparency using setVideoTransparency block", () => {
+        block.setVideoTransparency({ TRANSPARENCY: 75 });
+        expect(block.globalVideoTransparency).toBe(75);
+        expect(runtime.ioDevices.video.setPreviewGhost).toHaveBeenCalledWith(75);
+    });
+
     test("should detect hand in costume", async () => {
         // Mock target with costumes
         const mockTarget = {
@@ -305,5 +311,73 @@ describe("blockClass", () => {
         const result = await block.detectHandInCostume({ COSTUME: 'nonexistent' }, mockUtil);
         
         expect(result).toBe('Costume not found');
+    });
+
+    test("should get and set model path", async () => {
+        // Test getting default model path
+        const defaultPath = block.getModelPath();
+        expect(typeof defaultPath).toBe('string');
+        
+        // Test setting model path
+        const newPath = 'https://example.com/models/';
+        const result = await block.setModelPath({ PATH: newPath });
+        expect(result).toBe('Model asset path set successfully');
+    });
+
+    test("should handle empty model path", async () => {
+        // Test with empty path - should not set
+        const result = await block.setModelPath({ PATH: '   ' });
+        expect(result).toBeUndefined();
+    });
+
+    test("should toggle video when starting hand detection", () => {
+        // Ensure video is off initially
+        block.globalVideoState = 'off';
+        
+        // Start detection
+        block.startHandDetection();
+        
+        // Video should be enabled
+        expect(runtime.ioDevices.video.enableVideo).toHaveBeenCalled();
+        expect(runtime.ioDevices.video.mirror).toBe(true);
+        expect(block.isHandDetecting()).toBe(true);
+    });
+
+    test("should not restart detection if already detecting", () => {
+        // Set video state to ON so enableVideo won't be called
+        block.globalVideoState = 'on';
+        
+        // Clear previous calls
+        runtime.ioDevices.video.enableVideo.mockClear();
+        
+        // Start detection
+        block.startHandDetection();
+        expect(block.isHandDetecting()).toBe(true);
+        
+        const callCount = runtime.ioDevices.video.enableVideo.mock.calls.length;
+        
+        // Try to start again
+        block.startHandDetection();
+        
+        // Should not call enableVideo again (and also should not restart detection)
+        expect(runtime.ioDevices.video.enableVideo.mock.calls.length).toBe(callCount);
+    });
+
+    test("should handle out of bounds hand index", () => {
+        const mockData = mockHelpers.resetHandData();
+        block.hands = mockData;
+        
+        // Test with hand index out of bounds
+        expect(block.handLandmarkX({ HAND_NUMBER: 10, LANDMARK: 0 })).toBe(0);
+        expect(block.handedness({ HAND_NUMBER: 10 })).toBe(' ');
+    });
+
+    test("should handle out of bounds landmark index", () => {
+        const mockData = mockHelpers.resetHandData();
+        block.hands = mockData;
+        
+        // Test with landmark index out of bounds (valid range is 0-20)
+        expect(block.handLandmarkX({ HAND_NUMBER: 1, LANDMARK: 25 })).toBe(0);
+        expect(block.handLandmarkRelativeX({ HAND_NUMBER: 1, LANDMARK: 25 })).toBe(0);
     });
 });
