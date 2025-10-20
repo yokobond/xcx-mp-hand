@@ -2,11 +2,13 @@
   "name": "xcx-mp-hand",
   "version": "1.0.0",
   "description": "extension for Xcratch",
+  "extensionId": "xcxMPHand",
   "scripts": {
     "setup-dev": "node ./scripts/setup-dev.mjs",
     "build": "rollup -c ./scripts/rollup.config.mjs",
     "watch": "rollup -c ./scripts/rollup.config.mjs --watch",
-    "test": "jest"
+    "test": "jest",
+    "version": "node ./scripts/version-build.mjs && git add dist"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
