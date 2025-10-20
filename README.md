@@ -9,6 +9,7 @@ Play [Example Project](https://xcratch.github.io/editor/#https://yokobond.github
 <iframe src="https://xcratch.github.io/editor/player#https://yokobond.github.io/xcx-mp-hand/projects/example.sb3" width="540px" height="460px" allow="camera"></iframe>
 
 * Detect and track up to four hands simultaneously
+* Detect hands from static images (stage snapshots or sprite costumes)
 * Identify whether detected hands are left or right hands
 * Track 21 different landmarks on each hand (fingertips, knuckles, etc.)
 * Access X, Y, and Z coordinates for precise hand positioning
@@ -53,6 +54,10 @@ PIP = Proximal interphalangeal joint, DIP = Distal interphalangeal joint
 - Is hand detecting? (boolean)
 - Get/Set hand detection interval time
 - Set video transparency
+
+### Detection Blocks
+- Detect hand on stage (snapshot detection)
+- Detect hand in costume (detect from sprite costume)
 
 ### Hand Information
 - Number of hands

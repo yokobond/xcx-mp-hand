@@ -5,6 +5,7 @@ import translations from './translations.json';
 import blockIcon from './block-icon.png';
 // import Video from '../../io/video';
 import {detect, setModelAssetPath, modelAssetPath} from './hand-landmarker.js';
+import {getCostumeByNameOrNumber, costumeToDataURL} from './costume-util.js';
 
 /**
  * States the video sensing activity can be set to.
@@ -265,6 +266,22 @@ class ExtensionBlocks {
         });
     }
 
+    getCostumeNamesMenu () {
+        const menu = [];
+        const target = this.runtime.getEditingTarget();
+        if (!target) {
+            return menu;
+        }
+        const costumes = target.sprite.costumes;
+        for (let i = 0; i < costumes.length; i++) {
+            menu.push({
+                text: costumes[i].name,
+                value: costumes[i].name
+            });
+        }
+        return menu;
+    }
+
     getLandmarkMenu () {
         const landmarks = [
             {
@@ -513,6 +530,20 @@ class ExtensionBlocks {
                         id: 'xcxMPHand.detectHandOnStage',
                         default: 'detect hand on stage'
                     })
+                },
+                {
+                    opcode: 'detectHandInCostume',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'xcxMPHand.detectHandInCostume',
+                        default: 'detect hand in costume [COSTUME]'
+                    }),
+                    arguments: {
+                        COSTUME: {
+                            type: ArgumentType.COSTUME,
+                            menu: 'costumeNamesMenu'
+                        }
+                    }
                 },
                 '---',
                 {
@@ -833,6 +864,47 @@ class ExtensionBlocks {
                 console.error('Error detecting hand:', error);
                 return error.message;
             });
+    }
+
+    /**
+     * Detect hand in a costume.
+     * @param {object} args - the block arguments
+     * @param {string} args.COSTUME - the costume name or number
+     * @param {object} util - utility object provided by the runtime
+     * @returns {Promise} - a promise that resolves when the hand is detected
+     */
+    async detectHandInCostume (args, util) {
+        const target = util.target;
+        const costumeName = args.COSTUME;
+        
+        try {
+            // Get costume by name or number
+            const costume = getCostumeByNameOrNumber(target, costumeName);
+            if (!costume) {
+                console.error('Costume not found:', costumeName);
+                return 'Costume not found';
+            }
+
+            // Convert costume to data URL
+            const dataURL = await costumeToDataURL(costume, 'png');
+            
+            // Create image from data URL
+            const image = new Image();
+            await new Promise((resolve, reject) => {
+                image.onload = resolve;
+                image.onerror = reject;
+                image.src = dataURL;
+            });
+
+            // Use the image element directly - MediaPipe can handle HTMLImageElement
+            // This is more efficient than creating a canvas and getting ImageData
+            const result = await detect(image);
+            this.hands = result;
+            return 'Hand detected';
+        } catch (error) {
+            console.error('Error detecting hand in costume:', error);
+            return error.message;
+        }
     }
 
     /**

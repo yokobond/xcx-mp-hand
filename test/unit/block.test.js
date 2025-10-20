@@ -2,6 +2,15 @@ import { blockClass } from "../../src/vm/extensions/block/index.js";
 import { mockHelpers } from "../../src/vm/extensions/block/hand-landmarker.js";
 
 jest.mock("../../src/vm/extensions/block/hand-landmarker.js");
+jest.mock("../../src/vm/extensions/block/costume-util.js", () => ({
+    getCostumeByNameOrNumber: jest.fn((target, costumeName) => {
+        const costume = target.sprite.costumes.find(c => c.name === costumeName);
+        return costume || null;
+    }),
+    costumeToDataURL: jest.fn((costume, format) => {
+        return Promise.resolve(costume.asset.encodeDataURI());
+    })
+}));
 
 // Mock browser APIs before tests run
 const mockCanvas = {
@@ -235,5 +244,56 @@ describe("blockClass", () => {
         block.globalVideoState = 'on';
         expect(mockStage.videoState).toBe('on');
         expect(block.globalVideoState).toBe('on');
+    });
+
+    test("should detect hand in costume", async () => {
+        // Mock target with costumes
+        const mockTarget = {
+            sprite: {
+                costumes: [
+                    {
+                        name: 'costume1',
+                        asset: {
+                            encodeDataURI: jest.fn(() => 'data:image/png;base64,mockCostumeData')
+                        },
+                        dataFormat: 'png'
+                    }
+                ]
+            }
+        };
+
+        const mockUtil = {
+            target: mockTarget
+        };
+
+        const result = await block.detectHandInCostume({ COSTUME: 'costume1' }, mockUtil);
+        
+        expect(result).toBe('Hand detected');
+        // After detection, hands data should be available
+        expect(block.numberOfHands()).toBeGreaterThanOrEqual(0);
+    });
+
+    test("should handle costume not found", async () => {
+        const mockTarget = {
+            sprite: {
+                costumes: [
+                    {
+                        name: 'costume1',
+                        asset: {
+                            encodeDataURI: jest.fn(() => 'data:image/png;base64,mockCostumeData')
+                        },
+                        dataFormat: 'png'
+                    }
+                ]
+            }
+        };
+
+        const mockUtil = {
+            target: mockTarget
+        };
+
+        const result = await block.detectHandInCostume({ COSTUME: 'nonexistent' }, mockUtil);
+        
+        expect(result).toBe('Costume not found');
     });
 });
