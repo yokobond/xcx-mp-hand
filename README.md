@@ -54,6 +54,7 @@ PIP = Proximal interphalangeal joint, DIP = Distal interphalangeal joint
 - Is hand detecting? (boolean)
 - Get/Set hand detection interval time
 - Set video transparency
+- Set camera direction (mirrored/flipped)
 
 ### Detection Blocks
 - Detect hand on stage (snapshot detection)

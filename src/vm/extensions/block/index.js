@@ -522,6 +522,21 @@ class ExtensionBlocks {
                         }
                     }
                 },
+                {
+                    opcode: 'setCameraDirection',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'xcxMPHand.setCameraDirection',
+                        default: 'set camera [DIRECTION]',
+                        description: 'Controls the direction of the camera'
+                    }),
+                    arguments: {
+                        DIRECTION: {
+                            type: ArgumentType.STRING,
+                            menu: 'cameraDirectionMenu'
+                        }
+                    }
+                },
                 '---',
                 {
                     opcode: 'detectHandOnStage',
@@ -710,6 +725,31 @@ class ExtensionBlocks {
                 VIDEO_STATE: {
                     acceptReporters: false,
                     items: this._buildMenu(this.VIDEO_STATE_INFO)
+                },
+                cameraDirectionMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: formatMessage({
+                                id: 'xcxMPHand.cameraDirectionMenu.mirrored',
+                                default: 'mirrored',
+                                description: 'Set the camera mirrored on'
+                            }),
+                            value: 'mirrored'
+                        },
+                        {
+                            text: formatMessage({
+                                id: 'xcxMPHand.cameraDirectionMenu.flipped',
+                                default: 'flipped',
+                                description: 'Set the camera flipped on'
+                            }),
+                            value: 'flipped'
+                        }
+                    ]
+                },
+                costumeNamesMenu: {
+                    acceptReporters: true,
+                    items: 'getCostumeNamesMenu'
                 }
             }
         };
@@ -744,6 +784,16 @@ class ExtensionBlocks {
         const transparency = Cast.toNumber(args.TRANSPARENCY);
         this.globalVideoTransparency = transparency;
         this.runtime.ioDevices.video.setPreviewGhost(transparency);
+    }
+
+    /**
+     * Set whether the camera should be flipped.
+     * @param {object} args - the block arguments
+     * @param {string} args.DIRECTION - 'mirrored' or 'flipped'
+     */
+    setCameraDirection (args) {
+        const direction = args.DIRECTION;
+        this.runtime.ioDevices.video.mirror = direction === 'mirrored';
     }
 
     /**

@@ -246,6 +246,16 @@ describe("blockClass", () => {
         expect(block.globalVideoState).toBe('on');
     });
 
+    test("should set camera direction", () => {
+        // Test mirrored direction
+        block.setCameraDirection({ DIRECTION: 'mirrored' });
+        expect(runtime.ioDevices.video.mirror).toBe(true);
+        
+        // Test flipped direction
+        block.setCameraDirection({ DIRECTION: 'flipped' });
+        expect(runtime.ioDevices.video.mirror).toBe(false);
+    });
+
     test("should detect hand in costume", async () => {
         // Mock target with costumes
         const mockTarget = {
