@@ -15,6 +15,7 @@ Play [Example Project](https://xcratch.github.io/editor/#https://yokobond.github
 * Access X, Y, and Z coordinates for precise hand positioning
 * Get relative coordinates for more accurate gesture recognition
 * Adjust detection sensitivity and performance settings
+* Control camera direction (mirrored or flipped view)
 
 ## Privacy Notice
 
@@ -72,6 +73,7 @@ PIP = Proximal interphalangeal joint, DIP = Distal interphalangeal joint
 
 ### Advanced
 - Set model path (for custom models)
+- Get model path (retrieve current model path)
 
 ## Development
 
