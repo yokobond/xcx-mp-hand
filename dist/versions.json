@@ -1,0 +1,11 @@
+{
+  "extensionId": "xcxMPHand",
+  "versions": [
+    {
+      "version": "1.1.0",
+      "buildDate": "2025-10-20T19:00:40.548Z",
+      "module": "1.1.0/xcxMPHand.mjs"
+    }
+  ],
+  "latest": "1.1.0"
+}
